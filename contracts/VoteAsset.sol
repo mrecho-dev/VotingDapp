@@ -12,7 +12,7 @@ contract VoteAsset is ERC721PresetMinterPauserAutoId {
     // voted event
     event mintingEvent(address mintedAddress);
 
-    constructor() ERC721PresetMinterPauserAutoId("VoteAsset", "VAST", "https://gateway.pinata.cloud/ipfs/QmVfcSFoUJ5CEMgPXAdZnabhsHVq9XuJUDpmwruyMCgEV2") {}
+    constructor() ERC721PresetMinterPauserAutoId("VoteAsset", "VAST", "https://gateway.pinata.cloud/ipfs/QmVfcSFoUJ5CEMgPXAdZnabhsHVq9XuJUDpmwruyMCgEV2/") {}
 
     // Overriding mint function to remove minter role so that everyone can mint nft.
     function mint(address to) public override virtual 
