@@ -40,12 +40,13 @@ App = {
       web3 = new Web3(App.provider);
     }
 
+    App.walletChangeListener();
     return App.initContract();
   },
 
   initContract: function() 
   {
-    $.getJSON('Voting.json', function (voting) {
+    $.getJSON('Voting.json',  voting => {
       // Instantiate a new truffle contract from the artifact
       App.contracts.Voting = TruffleContract(voting);
       // Connect provider to interact with contract
@@ -55,7 +56,7 @@ App = {
       return App.display();
     });
 
-    $.getJSON('VoteAsset.json', function (nft) {
+    $.getJSON('VoteAsset.json', nft => {
       // Instantiate a new truffle contract from the artifact
       App.contracts.VoteAsset = TruffleContract(nft);
       // Connect provider to interact with contract
@@ -67,9 +68,8 @@ App = {
   // Listen for events from Voting contract
   eventListener: function() 
   {
-    App.contracts.Voting.deployed().then(function (instance) 
-    {
-      instance.votingEvent({},{
+    App.contracts.Voting.deployed().then(instance => { 
+      instance.votingEvent({}, {
             // Looks entire blockchain for votingEvent
             fromBlock: 0,
             toBlock: 'latest',
@@ -84,9 +84,8 @@ App = {
   // Listen for events from VoteAsset contract
   mintingEventListener: function() 
   {
-    App.contracts.VoteAsset.deployed().then(function (instance) 
-    {
-      instance.mintingEvent({},{
+    App.contracts.VoteAsset.deployed().then(instance => {
+      instance.mintingEvent({}, {
             // Looks entire blockchain for mintingEvent
             fromBlock: 0,
             toBlock: 'latest',
@@ -129,7 +128,7 @@ App = {
 
     // Displays candidates for election
     App.contracts.Voting.deployed()
-      .then(function (instance) {
+      .then(instance => {
         votingInstance = instance;
         return votingInstance.count();
       })
@@ -137,9 +136,7 @@ App = {
         const promiseList = [];
         
         for (var i = 1; i <= count; i++) 
-        {
           promiseList.push(votingInstance.candidatesMap(i));
-        }
 
         const candidatesMap = await Promise.all(promiseList);
         App.candidates = candidatesMap;
@@ -166,10 +163,9 @@ App = {
         }
         return votingInstance.votersMap(App.account);
       })
-      .then(async (hasVoted) => 
-      {
+      .then(async (hasVoted) => {
         if (hasVoted) {
-          // Voters selected candidates name is shown
+          // Voted candidates name is shown
           Promise.resolve(votingInstance.votersMapID(App.account)).
             then(value => { 
               var votedName = $('#votedCandidate'); 
@@ -202,12 +198,11 @@ App = {
     var candidateId = $('#candidatesSelect').val();
 
     App.contracts.Voting.deployed()
-      .then(function (instance) {
+      .then(instance => {
         var vote = instance.vote(candidateId, { from: App.account });
         return vote;
       })
-      .then(function (result) 
-      {
+      .then(() => {
         // Waits for votes to update
         content.hide();
         loader.show();
@@ -220,32 +215,29 @@ App = {
       });
   },
 
-  getVotedID: function() {
-    App.contracts.Voting.deployed()
-      .then(function (instance) {
-        votingInstance = instance;
-      }).then(function (value) {
-        Promise.resolve(votingInstance.votersMapID(App.account)).
-          then(value => { return value.toString()}).
-            catch(function (err) {
-              console.error(err);
-            });
-      });
-
-
-    
-  },
-
   // Mints nft
   mintNFT: function () {
     App.contracts.VoteAsset.deployed()
-      .then(function (instance) {
+      .then(instance => {
         instance.mint(App.account, { from: App.account });
       })
       .catch(function (err) {
         console.error(err);
       });
   },
+
+  // Listens wallet change and refreshes the page
+  walletChangeListener: async function () {
+    try {
+      window.ethereum.on("accountsChanged", async () => {
+        // Refreshes the page
+        document.location.reload(true);
+      });
+    }
+    catch(err) {
+      console.error(err);
+    } 
+  }
 };
 
 $(document).ready(function() 
