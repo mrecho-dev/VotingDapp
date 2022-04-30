@@ -1,34 +1,7 @@
 {
-    "tokens":
-    [
-        {
-            "id": 0,
-            "description": "Proof of Vote",
-            "external_url": "https://github.com/mrecho-dev/VotingDapp",
-            "image": "https://gateway.pinata.cloud/ipfs/QmXoGA6APeiehWxoLt8GUiPszHjn56eevK5cD2vNG2CNtf",
-            "name": "Proof of vote - Candidate 1"
-        },
-        {
-            "id": 1,
-            "description": "Proof of Vote",
-            "external_url": "https://github.com/mrecho-dev/VotingDapp",
-            "image": "https://gateway.pinata.cloud/ipfs/QmXoGA6APeiehWxoLt8GUiPszHjn56eevK5cD2vNG2CNtf",
-            "name": "Proof of vote - Candidate 2"
-        },
-        {
-            "id": 2,
-            "description": "Proof of Vote",
-            "external_url": "https://github.com/mrecho-dev/VotingDapp",
-            "image": "https://gateway.pinata.cloud/ipfs/QmXoGA6APeiehWxoLt8GUiPszHjn56eevK5cD2vNG2CNtf",
-            "name": "Proof of vote - Candidate 3"
-        },
-        {
-            "id": 3,
-            "description": "Proof of Vote",
-            "external_url": "https://github.com/mrecho-dev/VotingDapp",
-            "image": "https://gateway.pinata.cloud/ipfs/QmXoGA6APeiehWxoLt8GUiPszHjn56eevK5cD2vNG2CNtf",
-            "name": "Proof of vote - Candidate 4"
-        }
-    ]
+    "description": "Proof of Vote",
+    "external_url": "https://github.com/mrecho-dev/VotingDapp",
+    "image": "https://gateway.pinata.cloud/ipfs/QmXoGA6APeiehWxoLt8GUiPszHjn56eevK5cD2vNG2CNtf",
+    "name": "Proof of vote - Candidate 1"
 }
 

@@ -3,13 +3,14 @@ App = {
   contracts: {},
   account: '0x0',
   hasVoted: false,
+  candidates: [],
 
   init: function() 
   {
     return App.initWeb3();
   },
 
-  // Connects client side application to local blockchain.
+  // Connects client side application to local blockchain
   initWeb3: function() 
   {
     if (typeof web3 !== 'undefined') 
@@ -24,7 +25,7 @@ App = {
         return false;
       };
 
-      // If Metamask is not installed.
+      // If Metamask is not installed
       if (!ethEnabled()) 
       {
         alert('Missing web3 connection! Please install MetaMask.');
@@ -63,30 +64,30 @@ App = {
     });
   },
 
-  // Listen for events from Voting contract.
+  // Listen for events from Voting contract
   eventListener: function() 
   {
     App.contracts.Voting.deployed().then(function (instance) 
     {
       instance.votingEvent({},{
-            // Looks entire blockchain for votingEvent.
+            // Looks entire blockchain for votingEvent
             fromBlock: 0,
             toBlock: 'latest',
           }).watch(function (error, evt) {
             console.log('Voting event triggered', evt);
-            // Reload the page when users voted.
+            // Reload the page when users voted
             App.display();
         });
     });
   },
 
-  // Listen for events from VoteAsset contract.
+  // Listen for events from VoteAsset contract
   mintingEventListener: function() 
   {
     App.contracts.VoteAsset.deployed().then(function (instance) 
     {
       instance.mintingEvent({},{
-            // Looks entire blockchain for votingEvent.
+            // Looks entire blockchain for mintingEvent
             fromBlock: 0,
             toBlock: 'latest',
           }).watch(function (error, evt) {
@@ -95,18 +96,24 @@ App = {
     });
   },
 
-  // Displays content on the webpage.
+  // Displays content on the webpage
   display: async () => {
     var votingInstance;
+    var title = $('#title');
+    var resultsTitle = $('#resultsTitle');
     var loader = $('#loader');
     var content = $('#content');
     var nft = $('#nft');
+    var dropdown = $('dropdown');
 
     loader.show();
+    title.show();
+    resultsTitle.hide();
     content.hide();
     nft.hide();
+    dropdown.show();
 
-    // Displays account address.
+    // Displays account address
     try 
     {
       const accounts = await window.ethereum.request({
@@ -120,7 +127,7 @@ App = {
       console.log(error);
     }
 
-    // Displays candidates for election.
+    // Displays candidates for election
     App.contracts.Voting.deployed()
       .then(function (instance) {
         votingInstance = instance;
@@ -135,6 +142,7 @@ App = {
         }
 
         const candidatesMap = await Promise.all(promiseList);
+        App.candidates = candidatesMap;
         var candidatesResults = $('#candidatesResults');
         candidatesResults.empty();
 
@@ -147,50 +155,88 @@ App = {
           var name = candidatesMap[i][1];
           var voteCount = candidatesMap[i][2];
 
-          // Candidates results template.
+          // Candidates results template
           var template = '<tr><th>' + id + '</th><td>' + name + '</td><td>' + voteCount + '</td></tr>'; 
           candidatesResults.append(template);
 
-          // Displays candidates voting options.
+          // Displays candidates voting options
           var candidateOption =
-            "<option value='" + id + "' >" + name + '</ option>';
+            "<option value='" + id + "' >" + name + '</option>';
           candidatesSelect.append(candidateOption);
         }
         return votingInstance.votersMap(App.account);
       })
-      .then(function (hasVoted) 
+      .then(async (hasVoted) => 
       {
-        // Voter can't vote twice, so form is hidden after voting.
         if (hasVoted) {
+          // Voters selected candidates name is shown
+          Promise.resolve(votingInstance.votersMapID(App.account)).
+            then(value => { 
+              var votedName = $('#votedCandidate'); 
+              votedName.empty(); 
+              votedName.append("Congratulations. You've voted for " + App.candidates[parseInt(value.toString()) - 1][1])
+            });
+          // Voter can't vote twice, so form is hidden after voting
           $('form').hide();
           nft.show();
+          title.hide();
+          resultsTitle.show();
+          $('votedCandidate').show();
         }
+
         loader.hide();
-        content.show();
+        content.show(); 
       })
       .catch(function (error) {
         console.warn(error);
       });
   },
 
+  // Votes for selected candidate
   castVote: function () {
+    var loader = $('#loader');
+    var content = $('#content');
+    var nft = $('#nft');
+    var title = $('#title');
+    var resultsTitle = $('#resultsTitle');
     var candidateId = $('#candidatesSelect').val();
+
     App.contracts.Voting.deployed()
       .then(function (instance) {
-        return instance.vote(candidateId, { from: App.account });
+        var vote = instance.vote(candidateId, { from: App.account });
+        return vote;
       })
       .then(function (result) 
       {
-        // Wait for votes to update
-        $('#content').hide();
-        $('#loader').show();
-        $('#nft').hide();
+        // Waits for votes to update
+        content.hide();
+        loader.show();
+        nft.hide();
+        title.hide();
+        resultsTitle.show();
       })
       .catch(function (err) {
         console.error(err);
       });
   },
 
+  getVotedID: function() {
+    App.contracts.Voting.deployed()
+      .then(function (instance) {
+        votingInstance = instance;
+      }).then(function (value) {
+        Promise.resolve(votingInstance.votersMapID(App.account)).
+          then(value => { return value.toString()}).
+            catch(function (err) {
+              console.error(err);
+            });
+      });
+
+
+    
+  },
+
+  // Mints nft
   mintNFT: function () {
     App.contracts.VoteAsset.deployed()
       .then(function (instance) {
@@ -201,7 +247,6 @@ App = {
       });
   },
 };
-
 
 $(document).ready(function() 
 {

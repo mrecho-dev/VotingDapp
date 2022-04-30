@@ -18,7 +18,12 @@
     <div class="container" style="width: 650px;">
       <div class="row">
         <div class="col-lg-12">
-          <h1 class="text-center">Election Results</h1>
+          <div id="title">
+            <h1 class="text-center">Select your candidate</h1>
+          </div>
+          <div id="resultsTitle">
+            <h1 class="text-center">Election Results</h1>
+          </div>
           <hr/>
           <br/>
           
@@ -54,11 +59,10 @@
       </div>
     </div>
 
-    <!-- BURASI -->
     <div id="nft" style="display: none;">
       <div class="container">
         <div class="col-md-12 text-center">
-          <p class="text-center">Congratulations. You've voted for</p>
+          <p id="votedCandidate" class="text-center"></p>
             <button type = "submit" onclick = "App.mintNFT(); return false;" class="btn btn-primary">Mint your vote NFT</button>
           </form>
         </div>

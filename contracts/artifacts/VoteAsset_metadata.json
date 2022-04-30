@@ -449,6 +449,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "mintersMap",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "name",
 				"outputs": [
@@ -1024,11 +1043,11 @@
 			]
 		},
 		"contracts/VoteAsset.sol": {
-			"keccak256": "0x4b7fb30ad6b7fb4c38f61957dac7896bf4a0e4e69393a5368ee9f6084c5a6459",
+			"keccak256": "0x5ec1bc8aea9c5c43ce66645935222815f91c3a13a1570308da9e6e518aaaee13",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b03fe48a1eda0034c9f49607794f4cc1cda4159ca799d32f8418ea822caec1eb",
-				"dweb:/ipfs/QmeBbKcTQdnKRfotVRfiyuFXrse2ZRwVJ2pnDiyX1rxZ1X"
+				"bzz-raw://2fac98fd123bc0f795e6b9f67ecb17304cd699be9b32428abf0eb4adb9e2fd06",
+				"dweb:/ipfs/QmZ4Ltzuhmt9tdDaiCziRqRda5ccoyymqm9htVUP5ZigWn"
 			]
 		}
 	},
