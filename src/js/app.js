@@ -1,7 +1,7 @@
 App = {
   provider: null,
   contracts: {},
-  account: '0x0',
+  account: '',
   hasVoted: false,
   candidates: [],
 
@@ -51,14 +51,14 @@ App = {
       App.contracts.Voting = TruffleContract(voting);
       // Connect provider to interact with contract
       App.contracts.Voting.setProvider(App.provider);
-      App.eventListener();
+      App.votingEventListener();
       
       return App.display();
     });
 
-    $.getJSON('VoteAsset.json', nft => {
+    $.getJSON('VoteAsset.json', voteAsset => {
       // Instantiate a new truffle contract from the artifact
-      App.contracts.VoteAsset = TruffleContract(nft);
+      App.contracts.VoteAsset = TruffleContract(voteAsset);
       // Connect provider to interact with contract
       App.contracts.VoteAsset.setProvider(App.provider);
       App.mintingEventListener();
@@ -66,7 +66,7 @@ App = {
   },
 
   // Listen for events from Voting contract
-  eventListener: function() 
+  votingEventListener: function() 
   {
     App.contracts.Voting.deployed().then(instance => { 
       instance.votingEvent({}, {
@@ -91,6 +91,7 @@ App = {
             toBlock: 'latest',
           }).watch(function (error, evt) {
             console.log('Minting event triggered', evt);
+            App.display();
         });
     });
   },
@@ -102,14 +103,16 @@ App = {
     var resultsTitle = $('#resultsTitle');
     var loader = $('#loader');
     var content = $('#content');
-    var nft = $('#nft');
+    var nftButton = $('#nftButton');
     var dropdown = $('dropdown');
+    var nftClaim = $('#nftClaim');
 
     loader.show();
     title.show();
     resultsTitle.hide();
     content.hide();
-    nft.hide();
+    nftButton.hide();
+    nftClaim.hide();
     dropdown.show();
 
     // Displays account address
@@ -119,7 +122,7 @@ App = {
         method: 'eth_requestAccounts',
       });
       App.account = accounts[0];
-      $('#accountAddress').html('Account address: ' + App.account);
+      $('#accountAddress').html('Your wallet address: <i>' + App.account + '</i>');
     } 
     catch (error) 
     {
@@ -170,16 +173,18 @@ App = {
             then(value => { 
               var votedName = $('#votedCandidate'); 
               votedName.empty(); 
-              votedName.append("Congratulations. You've voted for " + App.candidates[parseInt(value.toString()) - 1][1])
+              votedName.append("Congratulations. You've voted for <b>" + App.candidates[parseInt(value.toString()) - 1][1] + "</b>");
             });
           // Voter can't vote twice, so form is hidden after voting
           $('form').hide();
-          nft.show();
+          // After voting, claim NFT button is shown
+          nftButton.show();
+          nftClaim.hide();
           title.hide();
           resultsTitle.show();
           $('votedCandidate').show();
         }
-
+        App.displayNFT();
         loader.hide();
         content.show(); 
       })
@@ -189,10 +194,12 @@ App = {
   },
 
   // Votes for selected candidate
-  castVote: function () {
+  castVote: function () 
+  {
     var loader = $('#loader');
     var content = $('#content');
-    var nft = $('#nft');
+    var nftButton = $('#nftButton');
+    var nftClaim = $('#nftClaim');
     var title = $('#title');
     var resultsTitle = $('#resultsTitle');
     var candidateId = $('#candidatesSelect').val();
@@ -206,7 +213,8 @@ App = {
         // Waits for votes to update
         content.hide();
         loader.show();
-        nft.hide();
+        nftButton.hide();
+        nftClaim.hide();
         title.hide();
         resultsTitle.show();
       })
@@ -216,7 +224,8 @@ App = {
   },
 
   // Mints nft
-  mintNFT: function () {
+  mintNFT: function () 
+  {
     App.contracts.VoteAsset.deployed()
       .then(instance => {
         instance.mint(App.account, { from: App.account });
@@ -226,8 +235,37 @@ App = {
       });
   },
 
+  // Sets display after minting
+  displayNFT: function() 
+  {
+    var nftButton = $('#nftButton');
+    var nftClaim = $('#nftClaim');
+    var nftContractHTML = $('#nftContract');
+    var voteAssetInstance;
+    
+    App.contracts.VoteAsset.deployed()
+      .then(instance => {
+        voteAssetInstance = instance;
+        return voteAssetInstance.mintersMap(App.account, { from: App.account });
+      }).
+      then (hasMinted => {
+        if (hasMinted) {
+          nftButton.hide();
+          nftClaim.show();
+          Promise.resolve(voteAssetInstance.getContractAddress().
+            then(contract => {
+              nftContractHTML.html("NFT contract address: <i>" + contract + "</i>");
+            }));
+        }
+      })
+      .catch(function (err) {
+        console.error(err);
+      });
+  },
+
   // Listens wallet change and refreshes the page
-  walletChangeListener: async function () {
+  walletChangeListener: async function () 
+  {
     try {
       window.ethereum.on("accountsChanged", async () => {
         // Refreshes the page

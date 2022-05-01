@@ -5,7 +5,9 @@ import "@openzeppelin/contracts/token/ERC721/presets/ERC721PresetMinterPauserAut
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract VoteAsset is ERC721PresetMinterPauserAutoId {
+//Vote NFT contract of village chief election.
+contract VoteAsset is ERC721PresetMinterPauserAutoId 
+{
     using Counters for Counters.Counter;
     
     Counters.Counter private _tokenIdTracker;
@@ -28,5 +30,10 @@ contract VoteAsset is ERC721PresetMinterPauserAutoId {
         // Voter has minted.
         mintersMap[msg.sender] = true;
         emit mintingEvent(to);
+    }
+
+    function getContractAddress() public view returns (address)
+    {
+        return address(this);
     }
 }

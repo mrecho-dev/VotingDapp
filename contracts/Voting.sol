@@ -11,7 +11,7 @@ contract Voting
         string name;
         uint256 voteCount;
     }
-
+    
     // Key - value mapping of Candidate: id - Candidate.
     mapping(uint256 => Candidate) public candidatesMap;
     // Count of candidates. It is represented as id.
@@ -39,16 +39,6 @@ contract Voting
         count++;
         // Candidate is created with count id, candidateName name and 0 vote.
         candidatesMap[count] = Candidate(count, candidateName, 0);
-    }
-
-    function getVotedIDValue(address _key) public view returns (uint256)
-    {
-        return votersMapID[_key];
-    }
-
-    function getVotersMapValue(address _key) public view returns (bool)
-    {
-        return votersMap[_key];
     }
 
     function vote(uint256 candidateId) public 

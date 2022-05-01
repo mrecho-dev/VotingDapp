@@ -4,16 +4,12 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    
-    <title>Election Results</title>
-
-
+    <title>Village Chief Election</title>
   </head>
+
   <body>
     <div class="container" style="width: 650px;">
       <div class="row">
@@ -59,12 +55,20 @@
       </div>
     </div>
 
-    <div id="nft" style="display: none;">
       <div class="container">
         <div class="col-md-12 text-center">
           <p id="votedCandidate" class="text-center"></p>
-            <button type = "submit" onclick = "App.mintNFT(); return false;" class="btn btn-primary">Mint your vote NFT</button>
+            <button id="nftButton" style="display: none;" type = "submit" onclick = "App.mintNFT(); return false;" class="btn btn-primary">Mint your vote NFT</button>
+            <hr/>
           </form>
+        </div>
+      </div>
+
+    <div class="container">
+      <div class="col-md-12 text-center">
+        <div id="nftClaim" style="display: none;">
+          <p class="text-center">You've claimed: <b>'2022 Village Chief Election NFT'</b></p>
+          <p id="nftContract" class="text-center"></p>
         </div>
       </div>
     </div>
