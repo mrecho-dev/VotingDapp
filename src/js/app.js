@@ -73,7 +73,7 @@ App = {
             // Looks entire blockchain for votingEvent
             fromBlock: 0,
             toBlock: 'latest',
-          }).watch(function (error, evt) {
+          }).watch(function (err, evt) {
             console.log('Voting event triggered', evt);
             // Reload the page when users voted
             App.display();
@@ -89,7 +89,7 @@ App = {
             // Looks entire blockchain for mintingEvent
             fromBlock: 0,
             toBlock: 'latest',
-          }).watch(function (error, evt) {
+          }).watch(function (err, evt) {
             console.log('Minting event triggered', evt);
             App.display();
         });
@@ -124,9 +124,9 @@ App = {
       App.account = accounts[0];
       $('#accountAddress').html('Your wallet address: <i>' + App.account + '</i>');
     } 
-    catch (error) 
+    catch (err) 
     {
-      console.log(error);
+      console.log(err);
     }
 
     // Displays candidates for election
@@ -188,8 +188,12 @@ App = {
         loader.hide();
         content.show(); 
       })
-      .catch(function (error) {
-        console.warn(error);
+      .catch(function (err) {
+        console.warn(err);
+        title.hide();
+        document.getElementById("loaderText").innerHTML = "Please select correct network";
+        alert(err);
+        
       });
   },
 
@@ -263,16 +267,32 @@ App = {
       });
   },
 
-  // Listens wallet change and refreshes the page
+  // Listens wallet movements
   walletChangeListener: async function () 
   {
-    try {
+    // Listens wallet change and refreshes the page
+    try 
+    {
       window.ethereum.on("accountsChanged", async () => {
         // Refreshes the page
         document.location.reload(true);
       });
     }
-    catch(err) {
+    catch(err) 
+    {
+      console.error(err);
+    } 
+
+    // Listens network change and refreshes the page
+    try 
+    {
+      window.ethereum.on("networkChanged", async () => {
+        // Refreshes the page
+        document.location.reload(true);
+      });
+    }
+    catch(err) 
+    {
       console.error(err);
     } 
   }
