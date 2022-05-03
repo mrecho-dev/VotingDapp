@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/presets/ERC721PresetMinterPauserAutoId.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 //Vote NFT contract of village chief election.
@@ -11,7 +10,7 @@ contract VoteAsset is ERC721PresetMinterPauserAutoId
     using Counters for Counters.Counter;
     
     Counters.Counter private _tokenIdTracker;
-    // voted event
+    // minting event
     event mintingEvent(address mintedAddress);
 
     mapping(address => bool) public mintersMap;
