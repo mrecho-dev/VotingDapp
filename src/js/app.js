@@ -191,7 +191,7 @@ App = {
       .catch(function (err) {
         console.warn(err);
         title.hide();
-        document.getElementById("loaderText").innerHTML = "Please select correct network";
+        document.getElementById("loaderText").innerHTML = "<h2>Please connect to the correct network</h2>";
         alert(err);
         
       });
