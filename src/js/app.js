@@ -106,6 +106,7 @@ App = {
     var nftButton = $('#nftButton');
     var dropdown = $('dropdown');
     var nftClaim = $('#nftClaim');
+    var nftShow = $('#nftShow');
 
     loader.show();
     title.show();
@@ -113,6 +114,7 @@ App = {
     content.hide();
     nftButton.hide();
     nftClaim.hide();
+    nftShow.hide();
     dropdown.show();
 
     // Displays account address
@@ -180,6 +182,7 @@ App = {
           // After voting, claim NFT button is shown
           nftButton.show();
           nftClaim.hide();
+          nftShow.hide();
           title.hide();
           resultsTitle.show();
           $('votedCandidate').show();
@@ -204,6 +207,7 @@ App = {
     var content = $('#content');
     var nftButton = $('#nftButton');
     var nftClaim = $('#nftClaim');
+    var nftShow = $('#nftShow');
     var title = $('#title');
     var resultsTitle = $('#resultsTitle');
     var candidateId = $('#candidatesSelect').val();
@@ -219,6 +223,7 @@ App = {
         loader.show();
         nftButton.hide();
         nftClaim.hide();
+        nftShow.hide();
         title.hide();
         resultsTitle.show();
       })
@@ -244,6 +249,7 @@ App = {
   {
     var nftButton = $('#nftButton');
     var nftClaim = $('#nftClaim');
+    var nftShow = $('#nftShow');
     var nftContractHTML = $('#nftContract');
     var voteAssetInstance;
     
@@ -256,6 +262,7 @@ App = {
         if (hasMinted) {
           nftButton.hide();
           nftClaim.show();
+          nftShow.show();
           Promise.resolve(voteAssetInstance.getContractAddress().
             then(contract => {
               nftContractHTML.html("NFT contract address: <i>" + contract + "</i>");
