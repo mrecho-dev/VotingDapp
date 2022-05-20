@@ -104,7 +104,6 @@ App = {
     var loader = $('#loader');
     var content = $('#content');
     var nftButton = $('#nftButton');
-    var dropdown = $('dropdown');
     var nftClaim = $('#nftClaim');
     var nftShow = $('#nftShow');
 
@@ -115,7 +114,6 @@ App = {
     nftButton.hide();
     nftClaim.hide();
     nftShow.hide();
-    dropdown.show();
 
     // Displays account address
     try 
